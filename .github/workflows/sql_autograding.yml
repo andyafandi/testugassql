@@ -1,0 +1,32 @@
+name: SQL Autograding
+
+on: [push, pull_request]
+
+jobs:
+  test_sql:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: bookstore
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Install MySQL Client
+        run: sudo apt-get install -y mysql-client
+
+      - name: Run Student SQL File
+        run: mysql -h 127.0.0.1 -u root -proot bookstore < bookstore.sql
+
+      - name: Validate Table Structure
+        run: mysql -h 127.0.0.1 -u root -proot bookstore -e "SHOW TABLES;" | grep books
+
+      - name: Validate Data
+        run: mysql -h 127.0.0.1 -u root -proot bookstore -e "SELECT COUNT(*) FROM books;" | grep 2
