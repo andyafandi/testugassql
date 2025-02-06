@@ -4,10 +4,7 @@ USE bookstore;
 
 -- Students must complete this part
 CREATE TABLE books (
-    id INT PRIMARY KEY,
-    title VARCHAR(255),
-    author VARCHAR(255),
-    price DECIMAL(10,2)
+  
 );
 
 -- Insert sample data (students must complete this part)
